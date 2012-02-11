@@ -85,7 +85,7 @@ public class Example implements com.badlogic.gdx.ApplicationListener {
 		if(spinning) {
 			imageRotation = (int)Gdx.input.getPitch();
 		}
-		System.out.println(Gdx.input.getPitch());
+		System.out.println("Rotation: " + Gdx.input.getRotation() + " Pitch " + Gdx.input.getPitch() + " azimuth " + Gdx.input.getAzimuth() + " roll" + Gdx.input.getRoll());
 
 		spriteBatch.begin();
 		spriteBatch.setColor(Color.WHITE);
