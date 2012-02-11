@@ -1,2 +1,7 @@
 bin/*
 gen/*
+android/bin/*
+android/gen/*
+game/bin/*
+game/*.log
+

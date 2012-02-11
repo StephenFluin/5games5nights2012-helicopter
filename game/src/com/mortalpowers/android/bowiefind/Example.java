@@ -17,10 +17,13 @@ import com.badlogic.gdx.math.Vector2;
 public class Example implements com.badlogic.gdx.ApplicationListener {
 	SpriteBatch spriteBatch;
 	Texture texture;
+	Texture body;
+	Texture blades;
 	BitmapFont font;
 	Vector2 textPosition = new Vector2(100, 100);
 	Vector2 textDirection = new Vector2(1, 1);
 	double imageRotation = 0;
+	double extraBladeRotation = 0;
 	boolean spinning = false;
 	private OrthographicCamera camera;
 
@@ -32,7 +35,9 @@ public class Example implements com.badlogic.gdx.ApplicationListener {
 	public void create() {
 		font = new BitmapFont();
 		font.setColor(Color.RED);
+		body = new Texture(Gdx.files.internal("data/hbody.png"));
 		texture = new Texture(Gdx.files.internal("data/badlogic.jpg"));
+		blades = new Texture(Gdx.files.internal("data/hblades.png"));
 		spriteBatch = new SpriteBatch();
 
 		touchSound = Gdx.audio.newSound(Gdx.files
@@ -86,28 +91,7 @@ public class Example implements com.badlogic.gdx.ApplicationListener {
 	    texture.bind();
 		triangle.render(GL10.GL_TRIANGLES, 0, 3);
 		
-		// more fun but confusing :)
-		textPosition.add(textDirection.tmp().mul(Gdx.graphics.getDeltaTime())
-				.mul(60));
-		textPosition.x += textDirection.x * Gdx.graphics.getDeltaTime() * 60;
-		textPosition.y += textDirection.y * Gdx.graphics.getDeltaTime() * 60;
-
-		if (textPosition.x < 0) {
-			textDirection.x = -textDirection.x;
-			textPosition.x = 0;
-		}
-		if (textPosition.x > Gdx.graphics.getWidth()) {
-			textDirection.x = -textDirection.x;
-			textPosition.x = Gdx.graphics.getWidth();
-		}
-		if (textPosition.y < 0) {
-			textDirection.y = -textDirection.y;
-			textPosition.y = 0;
-		}
-		if (textPosition.y > Gdx.graphics.getHeight()) {
-			textDirection.y = -textDirection.y;
-			textPosition.y = Gdx.graphics.getHeight();
-		}
+		
 
 		imageRotation = 180.0
 				/ Math.PI
@@ -116,17 +100,23 @@ public class Example implements com.badlogic.gdx.ApplicationListener {
 		if (Gdx.input.getAccelerometerX() < 0) {
 			imageRotation += 180;
 		}
-
+		extraBladeRotation += (Gdx.graphics.getDeltaTime() * 60 )% 360;
+		//System.out.println("Blade rotation was " + extraBladeRotation + " because deltatime was " + Gdx.graphics.getDeltaTime());
+		//System.out.println("Full rotation was " + (float) ((int)imageRotation + (int)extraBladeRotation) + "from " + imageRotation + " and " + extraBladeRotation);
 		spriteBatch.begin();
 		spriteBatch.setColor(Color.WHITE);
-		spriteBatch.draw(texture, centerX - texture.getWidth() / 4, centerY
-				- texture.getHeight() / 4, texture.getWidth() / 4,
-				texture.getHeight() / 4, texture.getWidth() /2,
-				texture.getHeight() /2, 1, 1, (float) imageRotation, 0, 0,
-				texture.getWidth(), texture.getHeight(), false, false);
-		
-		font.draw(spriteBatch, "Hello World!", (int) textPosition.x,
-				(int) textPosition.y);
+		int iSize = 10;
+		spriteBatch.draw(body, centerX - body.getWidth() / iSize, centerY
+				- body.getHeight() / 10, body.getWidth() / iSize,
+				body.getHeight() / iSize, body.getWidth() /iSize * 2,
+				body.getHeight() /iSize * 2, 1, 1, (float) imageRotation, 0, 0,
+				body.getWidth(), body.getHeight(), false, false);
+		spriteBatch.draw(blades, centerX - blades.getWidth() / iSize, centerY
+				- blades.getHeight() / 10+ 40, blades.getWidth() / iSize ,
+				blades.getHeight() / iSize, blades.getWidth() /iSize * 2,
+				blades.getHeight() /iSize * 2, 1, 1, (float) ((int)imageRotation + (int)extraBladeRotation), 0, 0,
+				blades.getWidth(), blades.getHeight(), false, false);
+
 		spriteBatch.end();
 		
 		
